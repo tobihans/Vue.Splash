@@ -48,8 +48,7 @@ const onError = (error: AxiosError) => {
     default:
       break;
   }
-  // If response is not defined, it's a simple Error instance
-  console.log(error);
+  return Promise.reject(error);
 };
 
 instance.interceptors.response.use(onSuccess, onError);

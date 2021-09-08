@@ -4,12 +4,13 @@
 </template>
 
 <script lang='ts'>
+import Component from 'vue-class-component';
+import Vue from 'vue';
 
-export default {
-  name: 'Home',
+@Component
+export default class Home extends Vue {
   mounted(): void {
-    console.log(process.env.VUE_APP_ENV);
     console.log(this.$http);
-  },
-};
+  }
+}
 </script>
