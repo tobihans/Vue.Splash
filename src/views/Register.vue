@@ -1,17 +1,21 @@
 <template>
-  <div id="login">
-    <!-- Errors messages -->
-    <div class="messages"></div>
-    <form autocomplete="off" aria-autocomplete="off" @submit.prevent="login">
+  <div id="register">
+    <form autocomplete="off" aria-autocomplete="off" @submit.prevent="register">
       <header>
         <img class="logo" src="@/assets/vue.splash.png" alt="Vue.Splash Logo" />
-        <p class="small-letters">Welcome back.</p>
+        <p class="small-letters">Talents like you have their place here.</p>
       </header>
       <vs-input
-        v-model="identifier"
+        v-model="username"
         id="email"
         type="text"
-        label="Username / Email"
+        label="Username"
+      />
+      <vs-input
+        v-model="email"
+        id="password"
+        type="email"
+        label="Email"
       />
       <vs-input
         v-model="password"
@@ -19,13 +23,19 @@
         type="password"
         label="Password"
       />
-      <vs-button type="submit" data-variant="primary">Login</vs-button>
+      <vs-input
+        v-model="confirmPassword"
+        id="password"
+        type="password"
+        label="Confirm Password"
+      />
+      <vs-button type="submit" data-variant="primary">Register</vs-button>
       <footer>
         <p class="small-letters">
-          Don't have an account?
-          <router-link :to="{ name: 'Register' }"
-            ><span>Join us</span></router-link
-          >
+          Have an account?
+          <router-link :to="{ name: 'Login' }">
+            <span>Login</span>
+          </router-link>
         </p>
       </footer>
     </form>
@@ -44,17 +54,22 @@ import VsButton from '@/components/VsButton.vue';
     VsButton,
   },
 })
-export default class Login extends Vue {
-  private identifier = '';
+export default class Homepage extends Vue {
+  private username = '';
+
+  private email = '';
 
   private password = '';
 
+  private confirmPassword = '';
+
   private messages: Array<string> = [];
 
-  async login(): Promise<void> {
+  async register(): Promise<void> {
     try {
-      const { data } = await this.$http.post('Auth/login', {
-        Identifier: this.identifier,
+      const { data } = await this.$http.post('Auth/register', {
+        Email: this.email,
+        Username: this.username,
         Password: this.password,
       });
       console.log(data);
@@ -66,7 +81,7 @@ export default class Login extends Vue {
 </script>
 
 <style lang="scss" scoped>
-#login {
+#register {
   height: 100%;
   width: 100%;
   display: flex;

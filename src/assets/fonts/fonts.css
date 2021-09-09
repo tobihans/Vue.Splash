@@ -1,0 +1,54 @@
+    @font-face {
+    font-family: 'Antikor Mono Regular';
+    font-style: normal;
+    font-weight: normal;
+    src: local('Antikor Mono Regular'), url('Taner-Ardali-Antikor-Mono-Regular.woff') format('woff');
+    }
+    
+
+    @font-face {
+    font-family: 'Antikor Mono Light';
+    font-style: normal;
+    font-weight: normal;
+    src: local('Antikor Mono Light'), url('Taner-Ardali-Antikor-Mono-Light.woff') format('woff');
+    }
+    
+
+    @font-face {
+    font-family: 'Antikor Mono Bold';
+    font-style: normal;
+    font-weight: normal;
+    src: local('Antikor Mono Bold'), url('Taner-Ardali-Antikor-Mono-Bold.woff') format('woff');
+    }    
+    
+/* Nt */
+@font-face {
+    font-family: 'Nt Sans';
+    src: local('Noto Sans Light'), local('NotoSans-Light'),
+        url('NotoSans-Light.woff2') format('woff2'),
+        url('NotoSans-Light.woff') format('woff');
+    font-weight: 300;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Nt Sans';
+    src: local('Noto Sans Regular'), local('NotoSans-Regular'),
+        url('NotoSans-Regular.woff2') format('woff2'),
+        url('NotoSans-Regular.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Nt Sans SemBd';
+    src: local('Noto Sans SemiBold'), local('NotoSans-SemiBold'),
+        url('NotoSans-SemiBold.woff2') format('woff2'),
+        url('NotoSans-SemiBold.woff') format('woff');
+    font-weight: 600;
+    font-style: normal;
+    font-display: swap;
+}
+
