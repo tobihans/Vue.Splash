@@ -1,8 +1,8 @@
 <template>
   <div id="login">
     <!-- Errors messages -->
-    <div class="messages"></div>
-    <form autocomplete="off" aria-autocomplete="off" @submit.prevent="login">
+    <span ref="notify"></span>
+    <form id="login-form" @submit.prevent="login">
       <header>
         <img class="logo" src="@/assets/vue.splash.png" alt="Vue.Splash Logo" />
         <p class="small-letters">Welcome back.</p>
@@ -11,12 +11,15 @@
         v-model="identifier"
         id="email"
         type="text"
+        :required="true"
+        :validator="validateUsernameOrEmail"
         label="Username / Email"
       />
       <vs-input
         v-model="password"
         id="password"
         type="password"
+        :required="true"
         label="Password"
       />
       <vs-button type="submit" data-variant="primary">Login</vs-button>
@@ -37,11 +40,16 @@ import Vue from 'vue';
 import Component from 'vue-class-component';
 import VsInput from '@/components/VsInput.vue';
 import VsButton from '@/components/VsButton.vue';
+import { validateUsernameOrEmail } from '@/_helpers/validators';
+import { alert } from '@/_helpers/notifications';
 
 @Component({
   components: {
     VsInput,
     VsButton,
+  },
+  methods: {
+    validateUsernameOrEmail,
   },
 })
 export default class Login extends Vue {
@@ -51,6 +59,9 @@ export default class Login extends Vue {
 
   private messages: Array<string> = [];
 
+  //
+  validateUsernameOrEmail!: (input: string) => InputValidationResult;
+
   async login(): Promise<void> {
     try {
       const { data } = await this.$http.post('Auth/login', {
@@ -59,7 +70,7 @@ export default class Login extends Vue {
       });
       console.log(data);
     } catch (e) {
-      console.log(e);
+      alert((this.$refs.notify as Element), e.toString());
     }
   }
 }

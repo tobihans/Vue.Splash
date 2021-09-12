@@ -1,33 +1,42 @@
 <template>
   <div id="register">
-    <form autocomplete="off" aria-autocomplete="off" @submit.prevent="register">
+    <span class="message" ref="message"></span>
+    <form id="register-form" @submit.prevent="register">
       <header>
         <img class="logo" src="@/assets/vue.splash.png" alt="Vue.Splash Logo" />
         <p class="small-letters">Talents like you have their place here.</p>
       </header>
       <vs-input
         v-model="username"
-        id="email"
+        id="username"
         type="text"
+        :required="true"
         label="Username"
+        :validator="usernameValidator"
       />
       <vs-input
         v-model="email"
-        id="password"
+        id="email"
         type="email"
+        :required="true"
         label="Email"
+        :validator="emailValidator"
       />
       <vs-input
         v-model="password"
         id="password"
         type="password"
+        :required="true"
         label="Password"
+        :validator="passwordValidator"
       />
       <vs-input
         v-model="confirmPassword"
-        id="password"
+        id="confirm-password"
         type="password"
+        :required="true"
         label="Confirm Password"
+        :validator="confirmPwdValidator"
       />
       <vs-button type="submit" data-variant="primary">Register</vs-button>
       <footer>
@@ -47,14 +56,21 @@ import Vue from 'vue';
 import Component from 'vue-class-component';
 import VsInput from '@/components/VsInput.vue';
 import VsButton from '@/components/VsButton.vue';
+import { emailValidator, passwordValidator, usernameValidator } from '@/_helpers/validators';
+import { alert } from '@/_helpers/notifications';
 
 @Component({
   components: {
     VsInput,
     VsButton,
   },
+  methods: {
+    emailValidator,
+    usernameValidator,
+    passwordValidator,
+  },
 })
-export default class Homepage extends Vue {
+export default class Register extends Vue {
   private username = '';
 
   private email = '';
@@ -63,18 +79,33 @@ export default class Homepage extends Vue {
 
   private confirmPassword = '';
 
-  private messages: Array<string> = [];
+  // From decorator
+  emailValidator!: (input: string) => InputValidationResult;
+
+  passwordValidator!: (input: string) => InputValidationResult;
+
+  usernameValidator!: (input: string) => InputValidationResult;
+
+  confirmPwdValidator(content: string): InputValidationResult {
+    if (this.password === content) {
+      return true;
+    }
+    return {
+      state: 'danger',
+      title: 'Passwords doesn\'t match.',
+    };
+  }
 
   async register(): Promise<void> {
     try {
-      const { data } = await this.$http.post('Auth/register', {
+      await this.$http.post('Auth/register', {
         Email: this.email,
         Username: this.username,
         Password: this.password,
       });
-      console.log(data);
+      this.$router.push({ name: 'Homepage' });
     } catch (e) {
-      console.log(e);
+      alert(undefined, e.toString());
     }
   }
 }
@@ -106,6 +137,7 @@ header {
 }
 
 form {
+  margin: 0 1.5em;
   padding: 1em;
   border: 0.4px solid rgba(17, 17, 17, 0.4);
   border-radius: 0.2em;
@@ -114,7 +146,6 @@ form {
 
 .small-letters {
   margin-top: 0.5em;
-  font-size: 0.85em;
   text-align: center;
 }
 

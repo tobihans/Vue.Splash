@@ -1,3 +1,5 @@
+@use "partials/variables" as *;
+
 *, *::before, *::after {
   margin: 0;
   padding: 0;
@@ -22,4 +24,41 @@ a {
   &:active, &:visited {
     opacity: 0.9;
   }
+}
+
+li {
+list-style-type: none;
+position: relative;
+text-align: left;
+
+  &.ul-child {
+    span {
+      margin-left: 15px;
+    }
+
+    @each $state, $color in $ui_states {
+      &.#{$state} {
+        color: $color;
+        &::before {
+          background-color: $color;
+        }
+      }
+    }
+
+    &::before {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      content: '';
+      display: inline-block;
+      height: 5px;
+      width: 5px;
+      border-radius: 2px;
+    }
+  }
+}
+
+.small-letters {
+  font-size: 0.85em;
+  text-align: left;
 }

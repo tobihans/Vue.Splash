@@ -3,18 +3,6 @@ import flushPromises from 'flush-promises';
 import Login from '@/views/Login.vue';
 
 describe('Login.vue', () => {
-  test('Show warning when email is incorrect', async () => {
-    const wrapper = mount(Login);
-
-    await wrapper.find('div.input-group input#email').setValue('dev-at-dev.io');
-    await wrapper.find('div.input-group input#password').setValue('fakepwd');
-    await wrapper.find('form#login-form').trigger('submit.prevent');
-
-    const err = wrapper.find('div.input-group .warning');
-    expect(err).toBeTruthy();
-    expect(err).toContain('not a valid email address');
-  });
-
   test('Inform user when network error occured', async () => {
     const $http = {
       post: () => new Promise((_, reject) => reject(new Error())),
@@ -23,6 +11,7 @@ describe('Login.vue', () => {
       mocks: {
         $http,
       },
+      stubs: ['router-link'],
     });
 
     await wrapper.find('div.input-group input#email').setValue('learn@gmail.com');
@@ -31,7 +20,7 @@ describe('Login.vue', () => {
 
     await flushPromises();
 
-    expect(wrapper.find('.message').text()).toBe('An error occured. Please check your connection and retry.');
+    expect(wrapper.find('.notification')).toBeTruthy();
   });
 
   test('Redirect to dashboard when succesfully logged in and update store', async () => {
