@@ -22,13 +22,18 @@
         :required="true"
         label="Password"
       />
+      <p class="small-letters" style="text-align: left;">
+          <router-link :to="{ name: 'Register' }">
+            <span>Forgot password?</span>
+          </router-link>
+        </p>
       <vs-button type="submit" data-variant="primary">Login</vs-button>
       <footer>
         <p class="small-letters">
           Don't have an account?
-          <router-link :to="{ name: 'Register' }"
-            ><span>Join us</span></router-link
-          >
+          <router-link :to="{ name: 'Register' }">
+            <span>Join us</span>
+          </router-link>
         </p>
       </footer>
     </form>
@@ -64,11 +69,17 @@ export default class Login extends Vue {
 
   async login(): Promise<void> {
     try {
-      const { data } = await this.$http.post('Auth/login', {
+      const { data: { token } } = await this.$http.post('Auth/login', {
         Identifier: this.identifier,
         Password: this.password,
       });
-      console.log(data);
+      // Set the identifier based on what user provided
+      const identifier = this.identifier.indexOf('@') > -1 ? 'email' : 'username';
+      this.$store.dispatch('user/authenticate', {
+        [identifier]: this.identifier,
+        token,
+      });
+      this.$router.push({ name: 'Homepage' });
     } catch (e) {
       alert((this.$refs.notify as Element), e.toString());
     }

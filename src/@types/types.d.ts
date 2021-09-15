@@ -11,3 +11,8 @@
    title: string,
    rules?: Array<string>
  } | true;
+
+/**
+ * Define position on some UI elements in the viewport
+ */
+ type Position = 'top-left' | 'top-center' | 'top-right' | 'bottom-left' | 'bottom-center' | 'bottom-right';

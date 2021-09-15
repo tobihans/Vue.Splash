@@ -42,10 +42,12 @@ export default class VsNotification extends VsProps {
 </script>
 
 <style lang="scss" scoped>
+@use "../assets/scss/partials/_variables" as *;
+
 .message {
   font-family: "Nt Sans", sans-serif;
   min-height: calc(32px + 0.30em + 2px);
-  min-width: 286px;
+  max-width: 286px;
   width: 100%;
   margin-top: 1.5em;
   border: none;
@@ -54,5 +56,11 @@ export default class VsNotification extends VsProps {
   cursor: pointer;
   background: #111;
   color: #fff;
+
+  @each $state, $color in $ui_states {
+    &.#{$state} {
+      background: $color;
+    }
+  }
 }
 </style>

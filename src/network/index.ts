@@ -1,9 +1,31 @@
-import axios, { AxiosError, AxiosResponse } from 'axios';
+import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios';
 import store from '@/store';
 
 const instance = axios.create({
   baseURL: process.env.VUE_APP_BACKEND_URL,
 });
+
+/**
+ * Set Authorization header, if available, before request is sent
+ * @param config, the request config
+ * @returns config
+ */
+const setAuthHeader = (config: AxiosRequestConfig) => {
+  const authorization = store.getters['user/authorization'];
+  if (authorization.length > 0) {
+    config.headers.Authorization = `Bearer ${authorization}`;
+  }
+  return config;
+};
+
+/**
+ * Error handler for request interceptor
+ * @param error, the exception thrown
+ * @returns Promise
+ */
+const onRequestError = (error: AxiosError) => Promise.reject(error);
+
+instance.interceptors.request.use(setAuthHeader, onRequestError);
 
 /**
  * Reload the browser as soon as called
@@ -42,7 +64,6 @@ const onError = (error: AxiosError) => {
       // Reset auth header and force reload the browser
       // and send user to login
       store.dispatch('user/logout');
-      instance.defaults.headers.common.Authorization = '';
       forceReload();
       break;
     default:

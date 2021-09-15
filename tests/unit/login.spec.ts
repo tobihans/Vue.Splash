@@ -1,5 +1,6 @@
-import { mount } from '@vue/test-utils';
+import { createLocalVue, mount, RouterLinkStub } from '@vue/test-utils';
 import flushPromises from 'flush-promises';
+import Vuex from 'vuex';
 import Login from '@/views/Login.vue';
 
 describe('Login.vue', () => {
@@ -11,7 +12,9 @@ describe('Login.vue', () => {
       mocks: {
         $http,
       },
-      stubs: ['router-link'],
+      stubs: {
+        RouterLink: RouterLinkStub,
+      },
     });
 
     await wrapper.find('div.input-group input#email').setValue('learn@gmail.com');
@@ -23,28 +26,36 @@ describe('Login.vue', () => {
     expect(wrapper.find('.notification')).toBeTruthy();
   });
 
-  test('Redirect to dashboard when succesfully logged in and update store', async () => {
+  test('Update store on login and redirects', async () => {
+    const localVue = createLocalVue();
+    localVue.use(Vuex);
     const $http = {
-      post: () => new Promise((resolve) => resolve({ data: {} })),
-    };
-    const $store = {
-      modules: {
-        user: {
-          state: {},
-          actions: {
-            authenticate: jest.fn(),
-          },
-        },
-      },
+      post: () => new Promise((resolve) => resolve({ data: { token: 'blabla' } })),
     };
     const $router = {
-
+      push: jest.fn(),
     };
+    const actions = {
+      authenticate: jest.fn(),
+    };
+    const store = new Vuex.Store({
+      modules: {
+        user: {
+          namespaced: true,
+          state: {},
+          actions,
+        },
+      },
+    });
     const wrapper = mount(Login, {
+      localVue,
+      store,
       mocks: {
         $http,
-        $store,
         $router,
+      },
+      stubs: {
+        RouterLink: RouterLinkStub,
       },
     });
 
@@ -54,6 +65,10 @@ describe('Login.vue', () => {
 
     await flushPromises();
 
-    expect($store.modules.user.actions.authenticate).toHaveBeenCalled();
+    expect(actions.authenticate).toHaveBeenCalledWith(expect.any(Object), {
+      email: 'learn@gmail.com',
+      token: 'blabla',
+    });
+    expect($router.push).toHaveBeenCalledWith({ name: 'Homepage' });
   });
 });

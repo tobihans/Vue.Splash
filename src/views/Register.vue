@@ -103,7 +103,7 @@ export default class Register extends Vue {
         Username: this.username,
         Password: this.password,
       });
-      this.$router.push({ name: 'Homepage' });
+      this.$router.push({ name: 'Login' });
     } catch (e) {
       alert(undefined, e.toString());
     }
@@ -116,6 +116,7 @@ export default class Register extends Vue {
   height: 100%;
   width: 100%;
   display: flex;
+  flex-flow: column nowrap;
   justify-content: center;
   align-items: center;
 }
@@ -151,5 +152,8 @@ form {
 
 a span {
   text-decoration: underline;
+}
+.message {
+  margin-bottom: 20px;
 }
 </style>

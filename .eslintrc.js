@@ -17,6 +17,7 @@ module.exports = {
     'no-useless-escape': 'off',
     'no-shadow': 'off',
     'no-undef': 'off',
+    'no-param-reassign': 'off',
   },
   overrides: [
     {
