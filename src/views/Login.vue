@@ -23,7 +23,7 @@
         label="Password"
       />
       <p class="small-letters" style="text-align: left;">
-          <router-link :to="{ name: 'Register' }">
+          <router-link :to="{ name: 'Forgot-Password' }">
             <span>Forgot password?</span>
           </router-link>
         </p>

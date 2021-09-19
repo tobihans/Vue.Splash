@@ -1,4 +1,4 @@
-import { mount } from '@vue/test-utils';
+import { mount, RouterLinkStub } from '@vue/test-utils';
 import ForgotPassword from '@/views/ForgotPassword.vue';
 
 describe('ForgotPassword.vue', () => {
@@ -10,21 +10,25 @@ describe('ForgotPassword.vue', () => {
       mocks: {
         $http,
       },
+      stubs: {
+        RouterLink: RouterLinkStub,
+      },
     });
 
     await wrapper.find('div.input-group input#email').setValue('vue@splash.net');
     await wrapper.find('form').trigger('submit.prevent');
+    await wrapper.vm.$nextTick;
 
-    expect($http.post).toHaveBeenCalledWith('/api/password/forgot', {
-      email: 'vue@splash.net',
+    expect($http.post).toHaveBeenCalledWith('password/forgot', {
+      Email: 'vue@splash.net',
     });
-    expect(wrapper.html())
+    expect(await wrapper.find('#inform-user').text())
       .toContain('An email was sent to vue@splash.net. Check your inbox.');
   });
 
   test('Handles invalid email address case', async () => {
     const $http = {
-      post: () => Promise.resolve({ status: 500 }),
+      post: () => Promise.reject(),
     };
     const $notify = {
       alert: jest.fn(),
@@ -33,6 +37,9 @@ describe('ForgotPassword.vue', () => {
       mocks: {
         $http,
         $notify,
+      },
+      stubs: {
+        RouterLink: RouterLinkStub,
       },
     });
 
