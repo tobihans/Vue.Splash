@@ -5,12 +5,14 @@ import App from './App.vue';
 import router from './router';
 import store from './store';
 import axios from '@/network';
-import './assets/fonts/fonts.css';
+import '@/assets/fonts/fonts.css';
+import Notify from '@/services/notify';
 
 Unicon.add([uniExclamationTriangleMonochrome]);
 Vue.use(Unicon);
 
 Vue.prototype.$http = axios;
+Vue.prototype.$notify = new Notify();
 Vue.config.productionTip = false;
 
 new Vue({

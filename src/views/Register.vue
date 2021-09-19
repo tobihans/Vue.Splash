@@ -56,7 +56,11 @@ import Vue from 'vue';
 import Component from 'vue-class-component';
 import VsInput from '@/components/VsInput.vue';
 import VsButton from '@/components/VsButton.vue';
-import { emailValidator, passwordValidator, usernameValidator } from '@/_helpers/validators';
+import {
+  emailValidator,
+  passwordValidator,
+  usernameValidator,
+} from '@/_helpers/validators';
 import { alert } from '@/_helpers/notifications';
 
 @Component({
@@ -107,6 +111,13 @@ export default class Register extends Vue {
     } catch (e) {
       alert(undefined, e.toString());
     }
+  }
+
+  mounted(): void {
+    // Prefill email address if set in query
+    // Don't for invalid addresses
+    const email = this.$route.query.addr as string;
+    if (this.emailValidator(email) === true) this.email = email;
   }
 }
 </script>
