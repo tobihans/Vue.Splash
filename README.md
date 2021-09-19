@@ -9,6 +9,7 @@
 ```
 git clone https://github.com/tobihans/Vue.Splash.git
 cd Vue.Splash
+cp .env.example .env # And configure it to match your environment
 yarn install
 yarn serve
 ```
