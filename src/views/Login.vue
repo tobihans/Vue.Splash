@@ -69,6 +69,7 @@ export default class Login extends Vue {
 
   async login(): Promise<void> {
     try {
+      this.$loading(true);
       const { data: { token } } = await this.$http.post('Auth/login', {
         Identifier: this.identifier,
         Password: this.password,
@@ -79,9 +80,11 @@ export default class Login extends Vue {
         [identifier]: this.identifier,
         token,
       });
+      this.$loading(false);
       this.$router.push({ name: 'Homepage' });
     } catch (e) {
       alert((this.$refs.notify as Element), e.toString());
+      this.$loading(false);
     }
   }
 }

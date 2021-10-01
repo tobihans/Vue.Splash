@@ -7,9 +7,11 @@ import store from './store';
 import axios from '@/network';
 import '@/assets/fonts/fonts.css';
 import Notify from '@/services/notify';
+import loaderPlugin from '@/plugins/loader';
 
 Unicon.add([uniExclamationTriangleMonochrome]);
 Vue.use(Unicon);
+Vue.use(loaderPlugin);
 
 Vue.prototype.$http = axios;
 Vue.prototype.$notify = new Notify();

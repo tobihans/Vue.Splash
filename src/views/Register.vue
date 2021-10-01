@@ -102,6 +102,7 @@ export default class Register extends Vue {
 
   async register(): Promise<void> {
     try {
+      this.$loading(true);
       await this.$http.post('Auth/register', {
         Email: this.email,
         Username: this.username,
