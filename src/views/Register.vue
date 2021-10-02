@@ -109,7 +109,7 @@ export default class Register extends Vue {
       });
       this.$router.push({ name: 'Login' });
     } catch (e) {
-      this.$notify.alert({message: e.toString()});
+      this.$notify.alert({ message: e.toString() });
     }
   }
 

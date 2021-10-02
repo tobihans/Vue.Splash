@@ -17,49 +17,56 @@
 
 import Vue from 'vue';
 import Component from 'vue-class-component';
-
-const VsProps = Vue.extend({
-  props: {
-    content: String,
-    type: String,
-    autoclose: {
-      type: Number,
-      required: false,
-      default: () => 0,
-    },
-    dismissible: {
-      type: Boolean,
-      required: false,
-      default: () => false,
-    },
-    title: {
-      type: String,
-      required: false,
-      default: () => '',
-    },
-    position: {
-      type: String,
-      required: false,
-      default: () => 'top-center',
-      // eslint-disable-next-line
-      validator: (value: string) => {
-        return ([
-          'top-left',
-          'top-center',
-          'top-right',
-          'bottom-left',
-          'bottom-center',
-          'bottom-right',
-        ]).indexOf(value) > -1;
-      },
-    },
-  },
-});
+import { Prop } from 'vue-property-decorator';
 
 @Component
-export default class VsNotification extends VsProps {
+export default class VsNotification extends Vue {
+  @Prop({ type: String }) private content!: string;
+
+  @Prop({ type: String }) private type!: string;
+
+  @Prop({
+    type: Number,
+    required: false,
+    default: () => 0,
+  })
+  private autoclose!: number;
+
+  @Prop({
+    type: Boolean,
+    required: false,
+    default: () => false,
+  })
+  private dismissible!: boolean;
+
+  @Prop({
+    type: String,
+    required: false,
+    default: () => '',
+  })
+  private title!: string;
+
+  @Prop({
+    type: String,
+    required: false,
+    default: () => 'top-center',
+    // eslint-disable-next-line
+    validator: (value: string) => {
+      return ([
+        'top-left',
+        'top-center',
+        'top-right',
+        'bottom-left',
+        'bottom-center',
+        'bottom-right',
+      ]).indexOf(value) > -1;
+    },
+  })
+  private position!: Position;
+
   dismiss(): void {
     this.$destroy();
+    // eslint-disable-next-line
     this.$el.parentNode?.removeChild(this.$el);
   }
 

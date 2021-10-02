@@ -9,14 +9,8 @@
 import Vue from 'vue';
 import Component from 'vue-class-component';
 
-const VsProps = Vue.extend({
-  props: {
-
-  },
-});
-
 @Component
-export default class VsButton extends VsProps {
+export default class VsButton extends Vue {
 
 }
 </script>

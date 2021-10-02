@@ -31,34 +31,36 @@
 
 <script lang="ts">
 import Vue from 'vue';
+import { Prop } from 'vue-property-decorator';
 import Component from 'vue-class-component';
 
-const VsProps = Vue.extend({
-  props: {
-    id: String,
-    label: String,
-    value: String,
-    required: Boolean,
-    validator: {
-      type: Function,
-      required: false,
-      default: () => () => true,
-    },
-    type: {
-      type: String,
-      default: () => 'text',
-    },
-  },
-});
-
 @Component
-export default class VsInput extends VsProps {
+export default class VsInput extends Vue {
+  @Prop({ type: String }) private id!: string;
+
+  @Prop({ type: String }) private label!: string;
+
+  @Prop({ type: String }) private value!: string;
+
+  @Prop({
+    type: Function,
+    required: false,
+    default: () => () => true,
+  })
+  private validator!: (input: string) => boolean;
+
+  @Prop({
+    type: String,
+    default: () => 'text',
+  })
+  private type!: string;
+
   private validation: InputValidationResult = true;
 
   input(e: InputEvent): void {
     const { value } = e.target as HTMLInputElement;
     this.$emit('input', value);
-    this.validation = this.validator(value);
+    this.validation = this.validator(value) as InputValidationResult;
   }
 }
 </script>
