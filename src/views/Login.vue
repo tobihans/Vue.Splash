@@ -46,7 +46,6 @@ import Component from 'vue-class-component';
 import VsInput from '@/components/VsInput.vue';
 import VsButton from '@/components/VsButton.vue';
 import { validateUsernameOrEmail } from '@/_helpers/validators';
-import { alert } from '@/_helpers/notifications';
 
 @Component({
   components: {
@@ -83,7 +82,9 @@ export default class Login extends Vue {
       this.$loading(false);
       this.$router.push({ name: 'Homepage' });
     } catch (e) {
-      alert((this.$refs.notify as Element), e.toString());
+      this.$notify.alert({
+        message: e.toString(),
+      });
       this.$loading(false);
     }
   }
@@ -95,6 +96,7 @@ export default class Login extends Vue {
   height: 100%;
   width: 100%;
   display: flex;
+  flex-flow: column nowrap;
   justify-content: center;
   align-items: center;
 }

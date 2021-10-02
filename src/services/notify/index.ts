@@ -1,9 +1,11 @@
+import VsNotification from '@/components/VsNotification.vue';
+
 type Options = {
-  parent?: Element,
   position?: Position,
-  type?: 'popup' | 'toast',
+  shape?: 'popup' | 'toast',
   autoclose?: number,
   dismissible?: boolean,
+  type?: string,
 };
 
 type Notification = {
@@ -13,9 +15,8 @@ type Notification = {
 
 export default class Notify {
   protected static defaults: Options = {
-    parent: document.body,
     position: 'top-center',
-    type: 'toast',
+    shape: 'toast',
     autoclose: 0,
     dismissible: true,
   };
@@ -39,7 +40,28 @@ export default class Notify {
    * Configures a notification basic params
    * @returns this
    */
-  private notify(): Notify {
+  private notify(notif: Notification, options?: Options): Notify {
+    const {
+      type,
+      position,
+      autoclose,
+      dismissible,
+    } = { ...this.userDefaults, ...options };
+    const { title, message: content } = notif;
+    const notification = new VsNotification({
+      propsData: {
+        autoclose,
+        dismissible,
+        type,
+        position,
+        content,
+        title: title || '',
+      },
+    });
+    notification.$mount();
+    document.body.appendChild(notification.$el);
+    console.log(notification.$el);
+
     return this;
   }
 
@@ -48,7 +70,10 @@ export default class Notify {
    * @returns this
    */
   info(notification: Notification, options?: Options): Notify {
-    return this;
+    return this.notify(notification, {
+      ...options,
+      type: 'info',
+    });
   }
 
   /**
@@ -56,7 +81,10 @@ export default class Notify {
    * @returns this
    */
   warn(notification: Notification, options?: Options): Notify {
-    return this;
+    return this.notify(notification, {
+      ...options,
+      type: 'warn',
+    });
   }
 
   /**
@@ -64,23 +92,9 @@ export default class Notify {
    * @returns this
    */
   alert(notification: Notification, options?: Options): Notify {
-    return this;
-  }
-
-  /**
-   * Set a delay to close the notification
-   * @param delay the number of seconds to wait before closing
-   * @returns this
-   */
-  closeAfter(delay: number): Notify {
-    return this;
-  }
-
-  /**
- * Show the notification
- * @param at a position that overrides the default one
- */
-  show(at?: Position): void {
-    throw Error('Not implemented');
+    return this.notify(notification, {
+      ...options,
+      type: 'danger',
+    });
   }
 }

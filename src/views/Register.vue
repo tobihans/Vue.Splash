@@ -61,7 +61,6 @@ import {
   passwordValidator,
   usernameValidator,
 } from '@/_helpers/validators';
-import { alert } from '@/_helpers/notifications';
 
 @Component({
   components: {
@@ -110,7 +109,7 @@ export default class Register extends Vue {
       });
       this.$router.push({ name: 'Login' });
     } catch (e) {
-      alert(undefined, e.toString());
+      this.$notify.alert({message: e.toString()});
     }
   }
 
