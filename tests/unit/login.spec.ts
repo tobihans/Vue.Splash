@@ -10,6 +10,7 @@ describe('Login.vue', () => {
     };
     const wrapper = mount(Login, {
       mocks: {
+        $loading: jest.fn(),
         $http,
       },
       stubs: {
@@ -51,6 +52,7 @@ describe('Login.vue', () => {
       localVue,
       store,
       mocks: {
+        $loading: jest.fn(),
         $http,
         $router,
       },

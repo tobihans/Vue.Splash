@@ -22,9 +22,19 @@ const routes: Array<RouteConfig> = [
     component: () => import(/* webpackChunkName: "authentication" */ '../views/Register.vue'),
   },
   {
+    path: '/account/verify/:token',
+    name: 'VerifyAccount',
+    component: () => import(/* webpackChunkName: "authentication" */ '../views/VerifyEmail.vue'),
+  },
+  {
     path: '/forgot-password',
     name: 'Forgot-Password',
     component: () => import(/* webpackChunkName: "account-recovery" */ '../views/ForgotPassword.vue'),
+  },
+  {
+    path: '/account/password-reset',
+    name: 'PasswordReset',
+    component: () => import(/* webpackChunkName: "account-recovery" */ '../views/PasswordReset.vue'),
   },
   {
     path: '/homepage',

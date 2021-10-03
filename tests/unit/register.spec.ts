@@ -13,6 +13,7 @@ describe('Register.vue', () => {
     const wrapper = mount(Register, {
       localVue,
       mocks: {
+        $loading: jest.fn(),
         $route,
       },
       stubs: {
@@ -38,6 +39,7 @@ describe('Register.vue', () => {
     const wrapper = mount(Register, {
       localVue,
       mocks: {
+        $loading: jest.fn(),
         $route,
         $http,
       },

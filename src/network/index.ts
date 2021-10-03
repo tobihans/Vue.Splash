@@ -1,9 +1,12 @@
 import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios';
 import store from '@/store';
+import Notify from '@/services/notify';
 
 const instance = axios.create({
   baseURL: process.env.VUE_APP_BACKEND_URL,
 });
+
+const notifier = new Notify();
 
 /**
  * Set Authorization header, if available, before request is sent
@@ -23,7 +26,16 @@ const setAuthHeader = (config: AxiosRequestConfig) => {
  * @param error, the exception thrown
  * @returns Promise
  */
-const onRequestError = (error: AxiosError) => Promise.reject(error);
+const onRequestError = (error: AxiosError) => {
+  const message = (error.request)
+    ? 'A network error occured. Try later.'
+    : error.message;
+
+  notifier.alert({
+    message,
+  });
+  return Promise.reject(error);
+};
 
 instance.interceptors.request.use(setAuthHeader, onRequestError);
 
@@ -67,6 +79,13 @@ const onError = (error: AxiosError) => {
       forceReload();
       break;
     default:
+      {
+        let { message } = error.response?.data;
+        message = String(message) || 'An unknown error occured';
+        notifier.alert({
+          message,
+        });
+      }
       break;
   }
   return Promise.reject(error);

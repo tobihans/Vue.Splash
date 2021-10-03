@@ -8,6 +8,7 @@ describe('ForgotPassword.vue', () => {
     };
     const wrapper = mount(ForgotPassword, {
       mocks: {
+        $loading: jest.fn(),
         $http,
       },
       stubs: {
@@ -35,6 +36,7 @@ describe('ForgotPassword.vue', () => {
     };
     const wrapper = mount(ForgotPassword, {
       mocks: {
+        $loading: jest.fn(),
         $http,
         $notify,
       },

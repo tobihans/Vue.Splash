@@ -72,7 +72,7 @@ export default class VsNotification extends Vue {
 
   mounted(): void {
     if (this.autoclose > 0) {
-      setTimeout(this.dismiss, this.autoclose);
+      setTimeout(this.dismiss, this.autoclose * 1000);
     }
   }
 }

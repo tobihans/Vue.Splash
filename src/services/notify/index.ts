@@ -60,8 +60,6 @@ export default class Notify {
     });
     notification.$mount();
     document.body.appendChild(notification.$el);
-    console.log(notification.$el);
-
     return this;
   }
 

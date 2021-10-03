@@ -42,6 +42,8 @@ export default class VsInput extends Vue {
 
   @Prop({ type: String }) private value!: string;
 
+  @Prop({ type: Boolean }) private required!: boolean;
+
   @Prop({
     type: Function,
     required: false,

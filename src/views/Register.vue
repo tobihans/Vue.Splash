@@ -1,9 +1,9 @@
 <template>
   <div id="register">
     <span class="message" ref="message"></span>
-    <form id="register-form" @submit.prevent="register">
+    <form v-if="step === 1" id="register-form" @submit.prevent="register">
       <header>
-        <img class="logo" src="@/assets/vue.splash.png" alt="Vue.Splash Logo" />
+        <img class="logo" src="@/assets/vue.splash.png" alt="Vue.Splash Logo"/>
         <p class="small-letters">Talents like you have their place here.</p>
       </header>
       <vs-input
@@ -48,6 +48,24 @@
         </p>
       </footer>
     </form>
+    <form v-else id="register-form" @submit.prevent="verifyEmail">
+      <header>
+        <h3>Email Verification</h3>
+        <p class="small-letters">Paste the token sent to <strong>{{ email }}</strong> below.</p>
+      </header>
+      <vs-input
+        v-model="token"
+        id="token"
+        type="text"
+        :required="true"
+      />
+      <vs-button type="submit" data-variant="primary">Verify Email</vs-button>
+      <footer>
+        <p class="small-letters" @click="sendCode">
+          Resend the code
+        </p>
+      </footer>
+    </form>
   </div>
 </template>
 
@@ -82,8 +100,11 @@ export default class Register extends Vue {
 
   private confirmPassword = '';
 
-  // From decorator
-  emailValidator!: (input: string) => InputValidationResult;
+  private step: 1 | 2 = 1;
+
+  private token = '';
+
+  private emailValidator!: (input: string) => InputValidationResult;
 
   passwordValidator!: (input: string) => InputValidationResult;
 
@@ -100,22 +121,47 @@ export default class Register extends Vue {
   }
 
   async register(): Promise<void> {
+    this.$loading(true);
     try {
-      this.$loading(true);
       await this.$http.post('Auth/register', {
         Email: this.email,
         Username: this.username,
         Password: this.password,
       });
-      this.$router.push({ name: 'Login' });
-    } catch (e) {
-      this.$notify.alert({ message: e.toString() });
+      this.sendCode();
+      this.step = 2;
+    } catch { } finally {
+      this.$loading(false);
+    }
+  }
+
+  async verifyEmail(): Promise<void> {
+    this.$loading(true);
+    try {
+      await this.$http.post('email/verify', {
+        Email: this.email,
+        Token: this.token,
+      });
+      this.$router.push({ name: 'Homepage' });
+    } catch { } finally {
+      this.$loading(false);
+    }
+  }
+
+  async sendCode(): Promise<void> {
+    this.$loading(true);
+    try {
+      await this.$http.post('email', {
+        Email: this.email,
+      });
+    } catch { } finally {
+      this.$loading(false);
     }
   }
 
   mounted(): void {
-    // Prefill email address if set in query
-    // Don't for invalid addresses
+    // Prefills email address if set in query
+    // Doesn't do that for invalid addresses
     const email = this.$route.query.addr as string;
     if (this.emailValidator(email) === true) this.email = email;
   }

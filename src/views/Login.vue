@@ -1,7 +1,5 @@
 <template>
   <div id="login">
-    <!-- Errors messages -->
-    <span ref="notify"></span>
     <form id="login-form" @submit.prevent="login">
       <header>
         <img class="logo" src="@/assets/vue.splash.png" alt="Vue.Splash Logo" />
@@ -61,14 +59,11 @@ export default class Login extends Vue {
 
   private password = '';
 
-  private messages: Array<string> = [];
-
-  //
-  validateUsernameOrEmail!: (input: string) => InputValidationResult;
+  private validateUsernameOrEmail!: (input: string) => InputValidationResult;
 
   async login(): Promise<void> {
+    this.$loading(true);
     try {
-      this.$loading(true);
       const { data: { token } } = await this.$http.post('Auth/login', {
         Identifier: this.identifier,
         Password: this.password,
@@ -79,12 +74,8 @@ export default class Login extends Vue {
         [identifier]: this.identifier,
         token,
       });
-      this.$loading(false);
       this.$router.push({ name: 'Homepage' });
-    } catch (e) {
-      this.$notify.alert({
-        message: e.toString(),
-      });
+    } catch { } finally {
       this.$loading(false);
     }
   }
