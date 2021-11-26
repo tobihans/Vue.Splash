@@ -36,6 +36,7 @@ const routes: Array<RouteConfig> = [
     path: '/account/password-reset',
     name: 'PasswordReset',
     component: () => import(/* webpackChunkName: "account-recovery" */ '../views/PasswordReset.vue'),
+    props: ({ query: { token, email } }) => ({ token, email }),
   },
   {
     path: '/homepage',

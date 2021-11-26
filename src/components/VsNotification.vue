@@ -111,9 +111,11 @@ export default class VsNotification extends Vue {
 
   .content {
     padding-right: 2px;
+    font-size: 0.9em;
 
     .title {
       font-family: "Nt Sans Sembd", sans-serif;
+      font-size: 1.05em;
     }
   }
 
