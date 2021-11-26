@@ -1,10 +1,9 @@
-/* eslint-disable */
 import Vue from 'vue';
 
 declare module 'vue/types/vue' {
-  import { AxiosInstance } from 'axios';
+  import { Loader } from '@/plugins/loader';
 
   interface Vue {
-    $loading: AxiosInstance;
+    $loading: Loader;
   }
 }

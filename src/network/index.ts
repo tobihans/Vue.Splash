@@ -81,7 +81,7 @@ const onError = (error: AxiosError) => {
     default:
       {
         let { message } = error.response?.data;
-        message = String(message) || 'An unknown error occured';
+        message = String(message) ?? 'An unknown error occured';
         notifier.alert({
           message,
         });

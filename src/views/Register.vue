@@ -1,6 +1,5 @@
 <template>
   <div id="register">
-    <span class="message" ref="message"></span>
     <form v-if="step === 1" id="register-form" @submit.prevent="register">
       <header>
         <img class="logo" src="@/assets/vue.splash.png" alt="Vue.Splash Logo"/>
@@ -111,10 +110,7 @@ export default class Register extends Vue {
   usernameValidator!: (input: string) => InputValidationResult;
 
   confirmPwdValidator(content: string): InputValidationResult {
-    if (this.password === content) {
-      return true;
-    }
-    return {
+    return this.password === content ? true : {
       state: 'danger',
       title: 'Passwords doesn\'t match.',
     };
@@ -128,8 +124,9 @@ export default class Register extends Vue {
         Username: this.username,
         Password: this.password,
       });
-      this.sendCode();
+      await this.sendCode();
       this.step = 2;
+      this.listenForValidationStatusChange();
     } catch { } finally {
       this.$loading(false);
     }
@@ -142,7 +139,7 @@ export default class Register extends Vue {
         Email: this.email,
         Token: this.token,
       });
-      this.$router.push({ name: 'Homepage' });
+      this.login();
     } catch { } finally {
       this.$loading(false);
     }
@@ -154,6 +151,41 @@ export default class Register extends Vue {
       await this.$http.post('email', {
         Email: this.email,
       });
+    } catch { } finally {
+      this.$loading(false);
+    }
+  }
+
+  async listenForValidationStatusChange(): Promise<void> {
+    // Track number of ongoing registration processes.
+    const totalOnGoingProcess = Number(localStorage.getItem('totalOnGoingProcess')) ?? 0;
+    localStorage.setItem('totalOnGoingProcess', `${totalOnGoingProcess + 1}`);
+    window.addEventListener('storage', (() => {
+      if (window.localStorage.getItem('validated') === '^-^') {
+        window.localStorage.removeItem('validated');
+        this.login();
+      }
+    }));
+  }
+
+  async login(): Promise<void> {
+    this.$loading(true);
+    try {
+      const { data: { token } } = await this.$http.post('Auth/login', {
+        Identifier: this.username,
+        Password: this.password,
+      });
+      // Set the identifier based on what user provided
+      this.$store.dispatch('user/authenticate', {
+        email: this.email,
+        username: this.username,
+        token,
+      });
+      // Decrease the number of ongoing registration processes
+      const totalOnGoingProcess = (Number(localStorage.getItem('totalOnGoingProcess')) ?? 0) - 1;
+      if (totalOnGoingProcess > 0) window.localStorage.setItem('totalOnGoingProcess', `${totalOnGoingProcess}`);
+      else window.localStorage.removeItem('totalOnGoingProcess');
+      this.$router.push({ name: 'Homepage' });
     } catch { } finally {
       this.$loading(false);
     }

@@ -22,9 +22,10 @@ const routes: Array<RouteConfig> = [
     component: () => import(/* webpackChunkName: "authentication" */ '../views/Register.vue'),
   },
   {
-    path: '/account/verify/:token',
+    path: '/account/verify',
     name: 'VerifyAccount',
     component: () => import(/* webpackChunkName: "authentication" */ '../views/VerifyEmail.vue'),
+    props: ({ query: { token, email } }) => ({ token, email }),
   },
   {
     path: '/forgot-password',
@@ -40,6 +41,9 @@ const routes: Array<RouteConfig> = [
     path: '/homepage',
     name: 'Homepage',
     component: () => import(/* webpackChunkName: "home" */ '../views/Homepage.vue'),
+    meta: {
+      requiresAuth: true,
+    },
   },
 ];
 

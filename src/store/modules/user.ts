@@ -41,8 +41,8 @@ const module: Module<UserState, unknown> = {
     [MUTATION_TYPES.SET_AUTH_TOKEN](state: UserState, token: string) {
       state.token = token;
     },
-    [MUTATION_TYPES.SET_AUTH_STATE](state: UserState) {
-      state.loggedIn = !state.loggedIn;
+    [MUTATION_TYPES.SET_AUTH_STATE](state: UserState, authState: boolean) {
+      state.loggedIn = authState;
     },
     [MUTATION_TYPES.RESET_ALL](state: UserState) {
       state.loggedIn = false;
@@ -62,6 +62,7 @@ const module: Module<UserState, unknown> = {
       if ('token' in payload) {
         commit(MUTATION_TYPES.SET_AUTH_TOKEN, payload.token);
       }
+      commit(MUTATION_TYPES.SET_AUTH_STATE, true);
     },
     logout({ commit }) {
       commit(MUTATION_TYPES.RESET_ALL);
